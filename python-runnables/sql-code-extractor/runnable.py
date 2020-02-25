@@ -46,12 +46,19 @@ class MyRunnable(Runnable):
         recipes_per_project = {}
         project_count = 0
         for project in self.projects:
+            logging.info('Checking project {}'.format(project))
             progress_callback(project_count)
             project_count += 1
 
             project_handle = self.client.get_project(project)
             recipes_per_project[project] = 0
-            recipes = project_handle.list_recipes()
+            try:
+                recipes = project_handle.list_recipes()
+            except Exception as e:
+                message = "Could not retrieve list of recipes in project {}: {}"
+                recipes_per_project[project] = message.format(project,e)
+                logging.warning(message.format(project, e))
+                
             if len(recipes) == 0:
                 message = "No recipes could be retrieved from Project: {}"
                 logging.info(message.format(project))
@@ -64,7 +71,7 @@ class MyRunnable(Runnable):
                     sql = self.get_recipe_sql(project_handle, recipe_name, recipe_type)
                 except Exception as e:
                     message = "Could not retrieve sql code from recipe {} in project {}: {}"
-                    logging.info(message.format(recipe_name, project, e))
+                    logging.warning(message.format(recipe_name, project, e))
                     continue
                 if sql:
                     recipes_per_project[project] += 1
