@@ -1,4 +1,4 @@
-# SQL code extractor
+# SQL Code Extractor
 
 ## Overview
 * One of the strengths of DSS is its ability to run <b>visual recipes</b> using compute infrastructures (SQL databases, Hadoop clusters, etc). See: https://www.dataiku.com/learn/guide/getting-started/dss-concepts/where-does-it-all-happen.html
